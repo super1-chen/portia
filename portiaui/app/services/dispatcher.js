@@ -97,7 +97,7 @@ export default Ember.Service.extend({
     },
 
     addGeneratedUrl(spider, url) {
-        let spec = { isGenerated: true };
+        let spec = { type: 'generated' };
 
         if (!url || includesUrl(spider, url)) {
             spec.url = 'http://';
@@ -369,9 +369,10 @@ export default Ember.Service.extend({
     },
 
     replaceStartUrl(spider, oldUrl, newUrl, startUrlObject) {
+        // TODO: Trace this to the caller: only available for fixed urls not generated ones
         const urls = spider.get('startUrls');
         urls.removeObject(startUrlObject);
-        urls.addObject(startUrl({url: newUrl, isGenerated: startUrlObject.isGenerated}));
+        urls.addObject(startUrl({url: newUrl, type: startUrlObject.type}));
         spider.save();
     },
 

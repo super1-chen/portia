@@ -3,19 +3,17 @@ import { flatten } from '../utils/utils';
 import { augmentFragmentList, fragmentToString } from '../utils/start-urls';
 
 function generatedURL(spec) {
+    let fragments = spec.fragments || [{type: 'fixed', value: spec.url}];
     return {
         url: spec.url,
         type: 'generated',
-        fragments: [{
-            type: 'fixed',
-            value: spec.url
-        }]
+        fragments: fragments
     };
 }
 
 export default function startUrl(spec) {
     let urlObject = {};
-    if (spec.isGenerated) {
+    if (spec.type === 'generated') {
         urlObject = generatedURL(spec);
     } else {
         urlObject.url = spec.url;
@@ -40,19 +38,30 @@ export default function startUrl(spec) {
     urlObject.save = (spider) => {
         const urls = spider.get('startUrls');
         urls.pushObject(urlObject);
-        if (!spec.isGenerated) { spider.save(); }
+        spider.save();
         return urlObject;
     };
 
     urlObject.toString = () => {
-        if (spec.isGenerated) {
+        if (urlObject.isGenerated) {
             return urlObject.fragments.map(fragmentToString).join('');
         } else {
             return urlObject.url;
         }
     };
 
-    urlObject.isGenerated = !!spec.isGenerated;
+    urlObject.serialize = () => {
+        let base = {
+            'url': urlObject.toString(),
+            'type': urlObject.type
+        };
+        if (urlObject.type === 'generated') {
+            base.fragments = urlObject.fragments;
+        }
+        return base;
+    };
+
+    urlObject.isGenerated = urlObject.type === 'generated';
 
     urlObject.generateList = generateList;
 
