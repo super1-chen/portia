@@ -1,0 +1,19 @@
+{
+    "templates": [],
+    "start_urls": [
+        {"url": "http://www.example.com/index.html", "type": "url"},
+        {
+            "url": "http://generate/[...][1-5]",
+            "type": "generated",
+            "fragments": [
+                {"type": "fixed", "value": "http://generate/"},
+                {"type": "list", "value": "a b c"},
+                {"type": "range", "value": "1-5"}
+            ]
+        }
+    ],
+    "exclude_patterns": [],
+    "follow_patterns": [],
+    "links_to_follow": "patterns",
+    "respect_nofollow": true
+}

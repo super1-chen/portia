@@ -29,7 +29,7 @@ class SpiderTest(TestCase):
         self.assertEqual(set(self.smanager.list()), set(["seedsofchange", "seedsofchange2",
                 "seedsofchange.com", "pinterest.com", "ebay", "ebay2", "ebay3", "ebay4", "cargurus",
                 "networkhealth.com", "allowed_domains", "any_allowed_domains", "example.com", "example2.com",
-                "example3.com", "example4.com", "sitemaps"]))
+                "example3.com", "example4.com", "sitemaps", "example_generator.com"]))
 
     def test_spider_with_link_template(self):
         name = "seedsofchange"
@@ -364,6 +364,12 @@ Product B,http://www.example.com/path2,B"""
             "http://www.example.com/p/3",
             "http://www.example.com/p/4"
         ], [r.url for r in spider._start_requests])
+
+    def test_identity_start_urls(self):
+        spider = self.smanager.create('example_generator.com')
+        start_requests = list(spider.start_requests())
+        import pdb; pdb.set_trace()
+        self.assertEqual(start_requests[0].url, 'http://www.example.com/index.html')
 
     def test_links_to_follow(self):
         html = "<html><body><a href='http://www.example.com/link.html'>Link</a></body></html>"

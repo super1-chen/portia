@@ -168,6 +168,7 @@ class IblSpider(SitemapSpider):
             start_requests = self.form_requests
         else:
             start_requests = self._start_requests
+        # import pdb; pdb.set_trace();
         for req in start_requests:
             yield req
 
