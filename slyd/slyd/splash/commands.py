@@ -18,6 +18,7 @@ from twisted.python import log
 from jsonschema.exceptions import ValidationError
 
 from splash.browser_tab import JsError
+from splash.har.qt import cookies2har
 
 from slyd.utils.projects import ProjectModifier
 from slyd.resources.utils import _load_sample
@@ -30,9 +31,10 @@ _VIEWPORT_RE = re.compile('^\d{3,5}x\d{3,5}$')
 
 
 def cookies(socket):
+    cookies_list = socket.tab.network_manager.cookiejar.allCookies()
     message = {
         '_command': 'cookies',
-        'cookies': socket.tab.web_page.cookiejar.allCookies()
+        'cookies': cookies2har(cookies_list)
     }
     socket.sendMessage(message)
 
